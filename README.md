@@ -37,7 +37,7 @@ Similarly the messaging system can be queried for types of messages with additio
 
 # The REST-based Web service interface
 Although the Client library is the advised method of access for messages, POLEN also comes with a REST-based Web interface. Using this Web service, messages can be submitted and retrieved as JSON objects.
-## REST-based POST interface
+## REST-based HTTP-POST interface
 The following URL is used to submit POLEN messages.
 ```
    http://w3id.org/synbio/polen/publish/
@@ -52,7 +52,22 @@ This URL expects three different POST parameters:
   * A JSON Map can also be included as part of the content property to provide applciation more custom information.
   
 
-## REST-based GET interface
+## REST-based HTTP-GET interface
+The GET URLs has the following format:
+```
+http://w3id.org/synbio/polen/publish/messagesByTopic/{TOPIC}/{TIMESTAMP}/{NUMBER_OF_MESSAGES}
+```
+The TOPIC, TIMESTAMP and NUMBER_OF_MESSAGES parameters can be used to create URLs to query the POLEN infrastructure. For example, the following URL returns the first two messages that are published since 1st Jan 2014 for the "Part" topic.
+
+http://w3id.org/synbio/polen/messagesByTopic/Part/1388538000/2
+
 ## Retrieving messages using RSS feeds
+Recent messages can also be retrieved using RSS feeds. These feeds have the following URL format:
+```
+http://w3id.org/synbio/polen/{TOPIC}.rss
+```
+For example, http://w3id.org/synbio/polen/Part.rss feed can be used to receive he recentlt published messages for the "Part" topic.
+
+
 
 
