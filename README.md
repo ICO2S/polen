@@ -29,6 +29,37 @@ The messaging system is identified with a URI which is used to publish messages 
 Similarly the messaging system can be queried for types of messages with additional querying parameters. The example code below is used to poll messages that are for Datasheets, and are published on or after 01/12/2013. The maximum number of messages to poll is specified as 2.
 
     List messages = messagingSystem.poll("Datasheet", new Date(2013, 12, 1), 2);
+    
+## Example Messages
+The example below shows message created for the SBML model of a biological part. Its publisher is set to the Virtual Parts Repository.
+
+    Message message=new Message();
+	message.setTopic("Model");
+	message.setName("SlrR SBML model");
+	message.setDescription("An SBML model for the SlrR part");
+	message.setResourceUri("http://www.virtualparts.org/part/BO_28778/sbml");
+	message.setPublisher("http://www.virtualparts.org");
+	message.addProperty("type", "SBML");		
+
+Here, a new Datasheet message is created for a newly characterised promoter part. The publisher property is set to the SynBIS repository.
+
+    Message message=new Message();
+	message.setTopic("Datasheet");
+	message.setName("pNlpD");
+	message.setDescription("Genetic description of the pNlpD promoter");
+	message.setResourceUri("http://synbis.bg.ic.ac.uk/webapi/rest/datasheet/sbol/28");
+	message.setPublisher("http://synbis.bg.ic.ac.uk");
+
+Data repositories can also be registered with POLEN. This registry can then be queried by tools to access various information from different repositories. In this example, a new Repository message for the the SynBioHub repository created.
+
+	Message message=new Message();
+    message.setTopic("Repository");
+	message.setName("SynBioHub");
+	message.setDescription("A repository for biological designs");
+	message.setResourceUri("http://synbiohub.org");
+	message.setPublisher("http://synbiohub.org");
+	message.addProperty("type", "SBOL");
+
  
 ## Download the Client API
 [Click here](https://bitbucket.org/ncl-intbio/polen/downloads/polen-client-1.0-withDependencies.jar) to download the JAR file.
@@ -45,7 +76,7 @@ The following URL is used to submit POLEN messages.
 This URL expects three different POST parameters:
 - topic: The topic of the message. E.g. "Part" or "Model"
 - publisher: Publisher of the message
-- content: a JSON object with other details
+- content: a JSON object with details as below:
   * name : The name of the message
   * description: The description of the message
   * uri : The uri pointing to where the actual data are
