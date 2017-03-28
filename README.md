@@ -34,3 +34,25 @@ Similarly the messaging system can be queried for types of messages with additio
 [Click here](https://bitbucket.org/ncl-intbio/polen/downloads/polen-client-1.0-withDependencies.jar) to download the JAR file.
 
 [Click here](https://bitbucket.org/ncl-intbio/polen/downloads/polen-client-1.0-javadoc.jar) to download the Javadoc file.
+
+# The REST-based Web service interface
+Although the Client library is the advised method of access for messages, POLEN also comes with a REST-based Web interface. Using this Web service, messages can be submitted and retrieved as JSON objects.
+## REST-based POST interface
+The following URL is used to submit POLEN messages.
+```
+   http://w3id.org/synbio/polen/publish/
+```
+This URL expects three different POST parameters:
+- topic: The topic of the message. E.g. "Part" or "Model"
+- publisher: Publisher of the message
+- content: a JSON object with other details
+  * name : The name of the message
+  * description: The description of the message
+  * uri : The uri pointing to where the actual data are
+  * A JSON Map can also be included as part of the content property to provide applciation more custom information.
+  
+
+## REST-based GET interface
+## Retrieving messages using RSS feeds
+
+
