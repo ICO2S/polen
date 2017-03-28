@@ -71,7 +71,7 @@ Although the Client library is the advised method of access for messages, POLEN 
 ## REST-based HTTP-POST interface
 The following URL is used to submit POLEN messages.
 ```
-   http://w3id.org/synbio/polen/publish/
+   https://w3id.org/synbio/polen/publish/
 ```
 This URL expects three different POST parameters:
 - topic: The topic of the message. E.g. "Part" or "Model"
@@ -86,18 +86,18 @@ This URL expects three different POST parameters:
 ## REST-based HTTP-GET interface
 The GET URLs has the following format:
 ```
-http://w3id.org/synbio/polen/publish/messagesByTopic/{TOPIC}/{TIMESTAMP}/{NUMBER_OF_MESSAGES}
+https://w3id.org/synbio/polen/publish/messagesByTopic/{TOPIC}/{TIMESTAMP}/{NUMBER_OF_MESSAGES}
 ```
 The TOPIC, TIMESTAMP and NUMBER_OF_MESSAGES parameters can be used to create URLs to query the POLEN infrastructure. For example, the following URL returns the first two messages that are published since 1st Jan 2014 for the "Part" topic.
 
-http://w3id.org/synbio/polen/messagesByTopic/Part/1388538000/2
+https://w3id.org/synbio/polen/messagesByTopic/Part/1388538000/2
 
 ## Retrieving messages using RSS feeds
 Recent messages can also be retrieved using RSS feeds. These feeds have the following URL format:
 ```
-http://w3id.org/synbio/polen/{TOPIC}.rss
+https://w3id.org/synbio/polen/{TOPIC}.rss
 ```
-For example, http://w3id.org/synbio/polen/Part.rss feed can be used to receive he recentlt published messages for the "Part" topic.
+For example, https://w3id.org/synbio/polen/Part.rss feed can be used to receive he recentlt published messages for the "Part" topic.
 
 
 
