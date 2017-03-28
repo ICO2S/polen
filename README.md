@@ -1,3 +1,12 @@
+#The POLEN Infrastructure
+POLEN (PrOtocol For Linking External Nodes) is a cloud-based messaging infrastructure that allows publishing and retrieving messages. Using this system, data repositories for different types of data can be notified about newly available data. For example, when there is a new datasheet available for a biological part, it would be desirable to create a model for the part. However, repositories are often disconnected and it may not be straightforward to define a communication process between these repositories. POLEN can be used to link different repositories using a message-based communication system.
+
+The system uses REST-based Web services to publish and query the published messages. Each data type is handled by a different endpoint. These data types include “Part”, “Model”, “Datasheet” and “Repository”, and can be extended. Data are also exposed using RSS feeds for each type. These feeds can be used by external tools to retrieve published messages.
+
+In this messaging system, messages are simple, light-weight objects and do not contain the actual content of resources such as datasheets or models. Each message includes properties such as name, description, topic and resourceUri. The topic is used to specify the type of a message and resourceUri is used to point to where to get the actual resource from. Each message can also be customised using message properties, which are in the form of key/value pairs.
+
+POLEN is currently being used to integrate Flowers Consortium resources using messages. For example, model repositories are informed about newly available datasheets to create new dynamic models for biological parts; relevant repositories are informed about these models; and part repositories can listen for new part messages to integrate more information about newly available biological parts and to provide provenance information.
+
 #POLEN Messaging System Client
 The entry point for this api is MessagingSystem, which allows you to manage messages. The uk.ac.ncl.flowers.polen.util package contains support code which in normal usage you should not need to use.
 
