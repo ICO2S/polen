@@ -12,10 +12,29 @@ import java.io.Writer;
 import java.net.URL;
 import java.net.URLConnection;
 import java.net.URLEncoder;
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map.Entry;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+
+import org.apache.http.Header;
+import org.apache.http.HttpEntity;
+import org.apache.http.HttpResponse;
+import org.apache.http.NameValuePair;
+import org.apache.http.client.HttpClient;
+import org.apache.http.client.RedirectStrategy;
+import org.apache.http.client.entity.UrlEncodedFormEntity;
+import org.apache.http.client.methods.CloseableHttpResponse;
+import org.apache.http.client.methods.HttpGet;
+import org.apache.http.client.methods.HttpPost;
+import org.apache.http.impl.client.CloseableHttpClient;
+import org.apache.http.impl.client.HttpClientBuilder;
+import org.apache.http.impl.client.HttpClients;
+import org.apache.http.impl.client.LaxRedirectStrategy;
+import org.apache.http.message.BasicNameValuePair;
+import org.apache.http.util.EntityUtils;
 
 /**
  * Provides methods to get data from and post data to web resources given with
@@ -38,45 +57,27 @@ public final class HttpHandler {
 	 * @throws 		IOException if the web resource with the given URI cannot be accessed or its cannot be read.
 	 */
 	public static String get(String URI) throws IOException {
-		// URI=URLEncoder.encode(URI, "UTF-8");
-		URI = URI.replace(" ", "%20");
-		URI = URI.replace(">", "%3E");
-		URL url = new URL(URI);
-		int tried = 0;
-		InputStream stream = null;
-		while (tried < 5) {
-			try {
-				stream = url.openStream();
-				tried = 5;
-			}
-			catch (IOException exception) {
-				tried++;
-				System.out.print("Could not access to the uri after attempt "
-						+ tried + ". ");
-				try {
-					Thread.sleep(3000);// Sleep for 3 seconds
-				}
-				catch (Exception threadexception) {
-
-				}
-				if (tried == 5) {
-					tried = 0;
-					throw exception;
-				}
-				else {
-					System.out.println("Connection will be tried in 3 seconds");
-				}
-			}
-		}
-		String output = "";
-		try {
-			output = convertStreamToString(stream);
-		}
+		String output=null;		
+		CloseableHttpResponse response=null;
+		try {			
+			CloseableHttpClient httpclient = HttpClients.createDefault();
+			HttpGet httpGet = new HttpGet(URI);
+			response = httpclient.execute(httpGet);			
+		    HttpEntity entity = response.getEntity();
+		    output=convertStreamToString(entity.getContent());
+		} 
 		catch (IOException exception) {
 			throw new IOException("Could not read the stream from " + URI,
 					exception);
 		}
+		finally {
+			if (response!=null)
+			{			
+				response.close();
+			}		    
+		}
 		return output;
+				
 	}	
 
 	/**
@@ -88,49 +89,44 @@ public final class HttpHandler {
 	 */
 	public static String post(String uri,
 			HashMap<String, String> parameters) throws IOException {
-
-		URL url;
-		URLConnection urlConn;
-		DataOutputStream printout;
-		DataInputStream input;
-		// URL of CGI-Bin script.
-		url = new URL(uri);
-		// URL connection channel.
-		urlConn = url.openConnection();
-		// Let the run-time system (RTS) know that we want input.
-		urlConn.setDoInput(true);
-		// Let the RTS know that we want to do output.
-		urlConn.setDoOutput(true);
-		// No caching, we want the real thing.
-		urlConn.setUseCaches(false);
-		// Specify the content type.
-		urlConn.setRequestProperty("Content-Type",
-				"application/x-www-form-urlencoded");
-		// Send POST output.
-		printout = new DataOutputStream(urlConn.getOutputStream());
-
-		String content = "";
-		for (Entry<String, String> parameter : parameters.entrySet()) {
-			String parameterName = parameter.getKey();
-			String parameterValue = parameter.getValue();
-			if (content.length() > 0) {
-				content = content + "&";
+		CloseableHttpResponse response=null;
+		
+		String output=null;
+		try
+		{
+			HttpPost httpPost = new HttpPost(uri);
+			List<NameValuePair> nvps = new ArrayList<NameValuePair>();
+			for (Entry<String, String> parameter : parameters.entrySet()) {
+				String parameterName = parameter.getKey();
+				String parameterValue = parameter.getValue();
+				nvps.add(new BasicNameValuePair(parameterName, parameterValue));				
 			}
-			content = content + parameterName + "="
-					+ URLEncoder.encode(parameterValue);
+			httpPost.setEntity(new  UrlEncodedFormEntity(nvps));
+			CloseableHttpClient httpClient = HttpClients.createDefault();
+			
+			//HttpClient httpClient = HttpClientBuilder.create().setRedirectStrategy(new LaxRedirectStrategy()).build();
+			response = httpClient.execute(httpPost);
+			
+			int status=response.getStatusLine().getStatusCode();
+			if (status!=200)
+			{
+				Header locationHeader = response.getFirstHeader("location");
+		        if (locationHeader != null) {
+		            String redirectLocation = locationHeader.getValue();
+		            return post(redirectLocation,parameters);
+		        } 
+			}
+		    //System.out.println(response.getStatusLine());
+		    HttpEntity entity = response.getEntity();
+		    output=convertStreamToString(entity.getContent());		
+		} 
+		catch (IOException exception) {
+			throw new IOException("Could not post to " + uri,
+					exception);
 		}
-		Logger.getLogger(HttpHandler.class.getName()).log(Level.FINEST, "Data being posted:" + content);
-		printout.writeBytes(content);
-		printout.flush();
-		printout.close();
-		// Get  the response data.
-		input = new DataInputStream(urlConn.getInputStream());
-		String str;
-		String output = "";
-		while (null != ((str = input.readLine()))) {
-			output = output + str;
+		finally {
+		    response.close();
 		}
-		input.close();
 		return output;
 	}
 
@@ -157,5 +153,5 @@ public final class HttpHandler {
 			return "";
 		}
 	}
-
+	
 }

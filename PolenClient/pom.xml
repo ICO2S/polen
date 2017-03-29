@@ -4,7 +4,7 @@
 	<groupId>uk.ac.ncl.flowers</groupId>
 	<artifactId>polen-client</artifactId>
 	<packaging>jar</packaging>
-	<version>1.0</version>
+	<version>1.1</version>
 	<name>POLEN Messaging System Client</name>
 	<dependencies>
 		<dependency>
@@ -19,6 +19,12 @@
 			<artifactId>json-simple</artifactId>
 			<version>1.1</version>
 		</dependency>
+		<!-- https://mvnrepository.com/artifact/org.apache.httpcomponents/httpclient -->
+		<dependency>
+		    <groupId>org.apache.httpcomponents</groupId>
+		    <artifactId>httpclient</artifactId>
+		    <version>4.5.3</version>
+		</dependency>		
 	</dependencies>
 	<build>
 		<plugins>
