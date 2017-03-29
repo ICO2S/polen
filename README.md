@@ -86,7 +86,8 @@ This URL expects three different POST parameters:
 ## REST-based HTTP-GET interface
 The GET URLs has the following format:
 ```
-https://w3id.org/synbio/polen/publish/messagesByTopic/{TOPIC}/{TIMESTAMP}/{NUMBER_OF_MESSAGES}
+https://w3id.org/synbio/polen/publish/messagesByTopic/{TOPIC}/{TIMESTAMP}/
+{NUMBER_OF_MESSAGES}
 ```
 The TOPIC, TIMESTAMP and NUMBER_OF_MESSAGES parameters can be used to create URLs to query the POLEN infrastructure. For example, the following URL returns the first two messages that are published since 1st Jan 2014 for the "Part" topic.
 
