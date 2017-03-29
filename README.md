@@ -62,9 +62,9 @@ Data repositories can also be registered with POLEN. This registry can then be q
 
  
 ## Download the Client API
-[Click here](https://bitbucket.org/ncl-intbio/polen/downloads/polen-client-1.0-withDependencies.jar) to download the JAR file.
+[Click here](https://github.com/ICO2S/polen/releases/download/version1.1/polen-client-1.1-withDependencies.jar) to download the JAR file.
 
-[Click here](https://bitbucket.org/ncl-intbio/polen/downloads/polen-client-1.0-javadoc.jar) to download the Javadoc file.
+[Click here](https://github.com/ICO2S/polen/releases/download/version1.1/polen-client-1.1-javadoc.jar) to download the Javadoc file.
 
 # The REST-based Web service interface
 Although the Client library is the advised method of access for messages, POLEN also comes with a REST-based Web interface. Using this Web service, messages can be submitted and retrieved as JSON objects.
