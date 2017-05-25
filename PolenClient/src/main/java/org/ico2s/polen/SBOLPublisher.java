@@ -52,6 +52,32 @@ public class SBOLPublisher {
 
     }
 
+    public void publishGenBank(String gbf, String channel, String topic) throws PublishException {
+
+        StringMessage msg = new StringMessage();
+
+        msg.getHeader().setType("genbank");
+        msg.getHeader().setChannel(channel);
+        msg.getHeader().setTopic(topic);
+        msg.setContent(gbf);
+
+        publisher.publish(publisherId, secretKey, msg);
+
+    }
+
+    public void publishFASTA(String fasta, String channel, String topic) throws PublishException {
+
+        StringMessage msg = new StringMessage();
+
+        msg.getHeader().setType("fasta");
+        msg.getHeader().setChannel(channel);
+        msg.getHeader().setTopic(topic);
+        msg.setContent(fasta);
+
+        publisher.publish(publisherId, secretKey, msg);
+
+    }
+
     String sbolToString(SBOLDocument doc) throws UnsupportedEncodingException, SBOLConversionException {
 
         ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();

@@ -38,10 +38,9 @@ public class SBOLSubscriber {
     public List<SBOLDocument> consume(String channel, String topic, int n) throws ConsumeException {
 
         Subscription subscription = new Subscription();
-        subscription.setSubscriptionType(Subscription.Type.CHANNEL_TOPIC_TYPE);
+        subscription.setSubscriptionType(Subscription.Type.CHANNEL_TOPIC);
         subscription.setChannel(channel);
         subscription.setTopic(topic);
-        subscription.setType("sbol");
 
         try {
             return messagesToSbol(
@@ -60,9 +59,8 @@ public class SBOLSubscriber {
     public List<SBOLDocument> consume(String channel, int n) throws ConsumeException {
 
         Subscription subscription = new Subscription();
-        subscription.setSubscriptionType(Subscription.Type.CHANNEL_TYPE);
+        subscription.setSubscriptionType(Subscription.Type.CHANNEL);
         subscription.setChannel(channel);
-        subscription.setType("sbol");
 
         try {
             return messagesToSbol(
