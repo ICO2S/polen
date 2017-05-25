@@ -4,16 +4,6 @@ import com.microbasecloud.halogen.StringMessage;
 import com.microbasecloud.halogen.subscriber.HalSubscriber;
 import com.microbasecloud.halogen.subscriber.HalSubscriberWsClient;
 import com.microbasecloud.halogen.subscriber.Subscription;
-import org.sbolstandard.core2.SBOLConversionException;
-import org.sbolstandard.core2.SBOLDocument;
-import org.sbolstandard.core2.SBOLReader;
-import org.sbolstandard.core2.SBOLValidationException;
-
-import java.io.ByteArrayInputStream;
-import java.io.IOException;
-import java.nio.charset.StandardCharsets;
-import java.util.ArrayList;
-import java.util.List;
 import java.util.UUID;
 
 public class SBOLSubscriber {
@@ -35,58 +25,49 @@ public class SBOLSubscriber {
         this(new HalSubscriberWsClient(backendUrl), subscriberId, secretKey);
 
     }
-    public List<SBOLDocument> consume(String channel, String topic, int n) throws ConsumeException {
+
+    public SBOLSubscriber(UUID subscriberId, UUID secretKey) {
+
+        this("http://polen.ico2s.org:5000/", subscriberId, secretKey);
+
+    }
+
+    public SBOLSubscription subscribe(String channel, String topic) {
 
         Subscription subscription = new Subscription();
         subscription.setSubscriptionType(Subscription.Type.CHANNEL_TOPIC);
         subscription.setChannel(channel);
         subscription.setTopic(topic);
 
-        try {
-            return messagesToSbol(
-                    subscriber.consume(subscriberId, secretKey, subscription, n)
-            );
-        } catch (SBOLValidationException e) {
-            throw new ConsumeException(e);
-        } catch (SBOLConversionException e) {
-            throw new ConsumeException(e);
-        } catch (IOException e) {
-            throw new ConsumeException(e);
-        }
+        return new SBOLSubscription(this, subscription);
 
     }
 
-    public List<SBOLDocument> consume(String channel, int n) throws ConsumeException {
+    public SBOLSubscription subscribe(String channel, String topic, String type) {
+
+        Subscription subscription = new Subscription();
+        subscription.setSubscriptionType(Subscription.Type.CHANNEL_TOPIC_TYPE);
+        subscription.setChannel(channel);
+        subscription.setTopic(topic);
+        subscription.setType(type);
+
+        return new SBOLSubscription(this, subscription);
+
+    }
+
+    public SBOLSubscription subscribe(String channel) {
 
         Subscription subscription = new Subscription();
         subscription.setSubscriptionType(Subscription.Type.CHANNEL);
         subscription.setChannel(channel);
 
-        try {
-            return messagesToSbol(
-                    subscriber.consume(subscriberId, secretKey, subscription, n)
-            );
-        } catch (SBOLValidationException e) {
-            throw new ConsumeException(e);
-        } catch (SBOLConversionException e) {
-            throw new ConsumeException(e);
-        } catch (IOException e) {
-            throw new ConsumeException(e);
-        }
+        return new SBOLSubscription(this, subscription);
+
     }
 
-    List<SBOLDocument> messagesToSbol(List<StringMessage> messages) throws SBOLValidationException, SBOLConversionException, IOException {
+    public void reset() {
 
-        List<SBOLDocument> sbol = new ArrayList<SBOLDocument>();
+        subscriber.reset(subscriberId, secretKey);
 
-        for(StringMessage message : messages) {
-
-            ByteArrayInputStream stream = new ByteArrayInputStream(message.getContent().getBytes(StandardCharsets.UTF_8));
-
-            sbol.add(SBOLReader.read(stream));
-        }
-
-        return sbol;
     }
-
 }

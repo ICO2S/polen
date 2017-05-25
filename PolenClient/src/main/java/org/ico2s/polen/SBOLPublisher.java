@@ -31,6 +31,11 @@ public class SBOLPublisher {
 
     }
 
+    public SBOLPublisher(UUID subscriberId, UUID secretKey) {
+
+        this("http://polen.ico2s.org:5001/", subscriberId, secretKey);
+
+    }
 
     public void publishSBOL(SBOLDocument doc, String channel, String topic) throws PublishException {
 
