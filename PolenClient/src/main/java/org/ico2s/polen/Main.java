@@ -20,7 +20,7 @@ public class Main {
 
     public static void testPublish() throws Exception {
 
-        SBOLPublisher publisher = new SBOLPublisher("http://localhost:5001/", publisherId, secretKey);
+        PolenPublisher publisher = new PolenPublisher("http://localhost:5001/", publisherId, secretKey);
 
     //    SBOLDocument doc = new SBOLDocument();
       //  doc.setDefaultURIprefix("http://ico2s.org/");
@@ -31,9 +31,9 @@ public class Main {
 
     public static void testConsume() throws Exception {
 
-        SBOLSubscriber subscriber = new SBOLSubscriber("http://localhost:5000/", subscriberId, secretKey);
+        PolenSubscriber subscriber = new PolenSubscriber("http://localhost:5000/", subscriberId, secretKey);
 
-        SBOLSubscription subscription =  subscriber.subscribe("testChannel", "testTopic");
+        SBOLSubscription subscription =  subscriber.subscribeToSBOL("testChannel", "testTopic");
         List<SBOLDocument> sbol = subscription.consume(2000);
 
         for(SBOLDocument doc : sbol)

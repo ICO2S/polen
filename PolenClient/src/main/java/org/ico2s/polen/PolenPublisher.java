@@ -1,5 +1,6 @@
 package org.ico2s.polen;
 
+import com.google.gson.Gson;
 import com.microbasecloud.halogen.StringMessage;
 import com.microbasecloud.halogen.publisher.HalPublisher;
 import com.microbasecloud.halogen.publisher.HalPublisherWsClient;
@@ -12,26 +13,26 @@ import java.io.UnsupportedEncodingException;
 import java.nio.charset.StandardCharsets;
 import java.util.UUID;
 
-public class SBOLPublisher {
+public class PolenPublisher {
 
     HalPublisher<StringMessage> publisher;
     UUID publisherId;
     UUID secretKey;
 
-    public SBOLPublisher(HalPublisher<StringMessage> publisher, UUID publisherId, UUID secretKey) {
+    public PolenPublisher(HalPublisher<StringMessage> publisher, UUID publisherId, UUID secretKey) {
 
         this.publisher = publisher;
         this.publisherId = publisherId;
         this.secretKey = secretKey;
     }
 
-    public SBOLPublisher(String backendUrl, UUID publisherId, UUID secretKey) {
+    public PolenPublisher(String backendUrl, UUID publisherId, UUID secretKey) {
 
         this(new HalPublisherWsClient(backendUrl), publisherId, secretKey);
 
     }
 
-    public SBOLPublisher(UUID subscriberId, UUID secretKey) {
+    public PolenPublisher(UUID subscriberId, UUID secretKey) {
 
         this("http://polen.ico2s.org:5001/", subscriberId, secretKey);
 
@@ -88,6 +89,32 @@ public class SBOLPublisher {
         ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
         SBOLWriter.write(doc, byteArrayOutputStream);
         return new String(byteArrayOutputStream.toByteArray(), StandardCharsets.UTF_8);
+    }
+
+    public void publishResource(String channel, String topic, Resource resource) {
+
+        StringMessage msg = new StringMessage();
+
+        Gson gson = new Gson();
+
+        msg.getHeader().setType("resource");
+        msg.getHeader().setChannel(channel);
+        msg.getHeader().setTopic(topic);
+        msg.setContent(gson.toJson(resource));
+
+        publisher.publish(publisherId, secretKey, msg);
+
+    }
+
+    public void publishResource(String channel, String topic, String resourceUri, String name, String description) {
+
+        Resource resource = new Resource();
+        resource.resourceUri = resourceUri;
+        resource.name = name;
+        resource.description = description;
+
+        publishResource(channel, topic, resource);
+
     }
 
 

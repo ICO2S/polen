@@ -17,22 +17,22 @@ import java.util.List;
 
 public class SBOLSubscription {
 
-    SBOLSubscriber sbolSubscriber;
+    PolenSubscriber polenSubscriber;
     Subscription subscription;
 
-    public SBOLSubscription(SBOLSubscriber sbolSubscriber, Subscription subscription)
+    public SBOLSubscription(PolenSubscriber polenSubscriber, Subscription subscription)
     {
-        this.sbolSubscriber = sbolSubscriber;
+        this.polenSubscriber = polenSubscriber;
         this.subscription = subscription;
     }
 
     public List<SBOLDocument> consume(int n) throws ConsumeException {
 
-        HalSubscriber<StringMessage> subscriber = sbolSubscriber.subscriber;
+        HalSubscriber<StringMessage> subscriber = polenSubscriber.subscriber;
 
         try {
             return messagesToSbol(
-                    subscriber.consume(sbolSubscriber.subscriberId, sbolSubscriber.secretKey, subscription, n)
+                    subscriber.consume(polenSubscriber.subscriberId, polenSubscriber.secretKey, subscription, n)
             );
         } catch (SBOLValidationException e) {
             throw new ConsumeException(e);
